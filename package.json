@@ -1,0 +1,20 @@
+{
+  "name": "family-rewards-app",
+  "version": "1.0.0",
+  "description": "Simple Vue.js + Vite app for family task rewards with persistent counts",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "api": "node api-server.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.38",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "vite": "^5.0.0"
+  }
+}
