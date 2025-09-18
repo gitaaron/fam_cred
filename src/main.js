@@ -90,7 +90,7 @@ const App = {
   template: `
     <div class="container">
       <div class="header">
-        <div class="title">🏆 Family Rewards Dashboard</div>
+        <div class="title">🏆 Fam Cred</div>
         <div v-if="state.loading" class="sub">Syncing…</div>
       </div>
 
