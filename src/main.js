@@ -1,4 +1,4 @@
-import { createApp, reactive, onMounted, computed } from "vue";
+import { createApp, reactive, onMounted, onUnmounted, computed } from "vue";
 import './style.css';
 
 const membersConfig = [
@@ -34,8 +34,12 @@ const membersConfig = [
 const state = reactive({
   counts: {}, // id -> number
   loading: false,
-  error: null
+  error: null,
+  syncing: false // for cross-tab sync indicator
 });
+
+// Server-Sent Events for real-time sync across devices
+let eventSource = null;
 
 async function fetchState() {
   state.loading = true;
@@ -50,6 +54,7 @@ async function fetchState() {
   }
 }
 async function updateCount(id, delta) {
+  console.log('Updating count:', id, delta);
   state.loading = true;
   try {
     const res = await fetch('/api/complete', {
@@ -58,10 +63,13 @@ async function updateCount(id, delta) {
       body: JSON.stringify({ id, delta })
     });
     const data = await res.json();
+    console.log('Update response:', data);
     if (data && data.id) {
       state.counts[data.id] = data.count;
+      // Server will broadcast the change to all connected clients via SSE
     }
   } catch (e) {
+    console.error('Update failed:', e);
     state.error = 'Failed to update';
   } finally {
     state.loading = false;
@@ -70,7 +78,57 @@ async function updateCount(id, delta) {
 
 const App = {
   setup() {
-    onMounted(fetchState);
+    onMounted(() => {
+      fetchState();
+      
+      // Connect to Server-Sent Events for real-time updates
+      console.log('Connecting to SSE...');
+      eventSource = new EventSource('/api/events');
+      
+      eventSource.onopen = () => {
+        console.log('SSE connection opened');
+      };
+      
+      eventSource.onmessage = (event) => {
+        console.log('SSE message received:', event.data);
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'count-updated') {
+            console.log('Updating count from SSE:', data);
+            // Show sync indicator briefly
+            state.syncing = true;
+            setTimeout(() => { state.syncing = false; }, 1000);
+            
+            // Update local state when another device/tab makes a change
+            state.counts[data.id] = data.count;
+          } else if (data.type === 'connected') {
+            console.log('SSE connection confirmed');
+          }
+        } catch (e) {
+          console.error('Error parsing SSE message:', e);
+        }
+      };
+      
+      eventSource.onerror = (error) => {
+        console.error('SSE connection error:', error, 'ReadyState:', eventSource.readyState);
+        // Attempt to reconnect after a delay
+        setTimeout(() => {
+          if (eventSource && eventSource.readyState === EventSource.CLOSED) {
+            console.log('Attempting to reconnect SSE...');
+            eventSource = new EventSource('/api/events');
+          }
+        }, 5000);
+      };
+    });
+    
+    onUnmounted(() => {
+      // Clean up the SSE connection
+      if (eventSource) {
+        eventSource.close();
+        eventSource = null;
+      }
+    });
+    
     const members = membersConfig;
 
     function starsArray(count) {
@@ -92,6 +150,7 @@ const App = {
       <div class="header">
         <div class="title">🏆 Fam Cred</div>
         <div v-if="state.loading" class="sub">Syncing…</div>
+        <div v-else-if="state.syncing" class="sub">🔄 Updated from another device</div>
       </div>
 
       <div class="grid">

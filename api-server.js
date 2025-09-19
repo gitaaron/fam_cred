@@ -12,11 +12,14 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 
-// Enable CORS for Vite dev server
+// Store active SSE connections
+const sseConnections = new Set();
+
+// Enable CORS for all origins (for development)
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Cache-Control');
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   } else {
@@ -49,9 +52,51 @@ function writeState(state) {
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));
 }
 
+// Broadcast to all connected SSE clients
+function broadcastToClients(data) {
+  const message = `data: ${JSON.stringify(data)}\n\n`;
+  console.log(`Broadcasting to ${sseConnections.size} clients:`, data);
+  sseConnections.forEach(res => {
+    try {
+      res.write(message);
+    } catch (error) {
+      console.log('Removing dead SSE connection');
+      sseConnections.delete(res);
+    }
+  });
+}
+
 app.get('/api/state', (req, res) => {
   const state = readState();
   res.json(state);
+});
+
+// Server-Sent Events endpoint for real-time updates
+app.get('/api/events', (req, res) => {
+  console.log('New SSE connection from:', req.ip || req.connection.remoteAddress);
+  
+  // Set SSE headers
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Cache-Control'
+  });
+
+  // Add this connection to the set
+  sseConnections.add(res);
+  console.log(`Total SSE connections: ${sseConnections.size}`);
+
+  // Send initial connection message
+  res.write(`data: ${JSON.stringify({ type: 'connected' })}\n\n`);
+
+  // Handle client disconnect
+  req.on('close', () => {
+    console.log('SSE connection closed');
+    sseConnections.delete(res);
+    console.log(`Remaining SSE connections: ${sseConnections.size}`);
+  });
 });
 
 app.post('/api/complete', (req, res) => {
@@ -64,6 +109,14 @@ app.post('/api/complete', (req, res) => {
   const next = Math.max(0, Math.min(30, current + delta));
   state.members[id] = next;
   writeState(state);
+  
+  // Broadcast the change to all connected clients
+  broadcastToClients({
+    type: 'count-updated',
+    id,
+    count: next
+  });
+  
   res.json({ id, count: next });
 });
 
