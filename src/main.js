@@ -4,31 +4,42 @@ import './style.css';
 const membersConfig = [
   {
     id: "aaron",
-    name: "Aaron",
-    task: "Make Bed",
-    reward: "Digital Watch",
+    name: "Baba",
+    task: "Laundry",
+    reward: "Spa Day",
     avatar: "/img/m_aaron.svg",
-    taskImg: "/img/task_bed.svg",
-    rewardImg: "/img/reward_watch.svg"
+    taskImg: "/img/laundry.avif",
+    rewardImg: "/img/pig_spa.png"
   },
   {
-    id: "liz",
-    name: "Liz",
-    task: "Dishes",
+    id: "malissa",
+    name: "Mahmee",
+    task: "Tidy",
     reward: "Spa Day",
     avatar: "/img/m_liz.svg",
-    taskImg: "/img/task_dishes.svg",
-    rewardImg: "/img/reward_spa.svg"
+    taskImg: "/img/mom_cleaning.png",
+    rewardImg: "/img/dog_spa.png"
   },
   {
     id: "malcolm",
-    name: "Malcolm",
-    task: "Brush Teeth",
-    reward: "Lego Set",
+    name: "Goh goh",
+    task: "Phonics Time",
+    reward: "Digital Watch",
     avatar: "/img/m_malcolm.svg",
-    taskImg: "/img/task_teeth.svg",
-    rewardImg: "/img/reward_lego.svg"
+    taskImg: "/img/phonics.webp",
+    rewardImg: "/img/spiderman_watch.png"
+  },
+  {
+    id: "arvin",
+    name: "Dai dai",
+    task: "Poo/pee in potty",
+    reward: "Digital Watch",
+    avatar: "/img/m_arvin.svg",
+    taskImg: "/img/potty.webp",
+    rewardImg: "/img/chase_watch.png"
   }
+
+
 ];
 
 const state = reactive({
@@ -148,7 +159,12 @@ const App = {
   template: `
     <div class="container">
       <div class="header">
-        <div class="title">🏆 Fam Cred</div>
+        <div class="title">
+          <img src="/img/trophy.svg" alt="Trophy" style="width: 44px; height: 44px; margin-right: 8px; vertical-align: middle;" 
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+          <div class="trophy-icon" style="display: none;"></div>
+          Home Cred
+        </div>
         <div v-if="state.loading" class="sub">Syncing…</div>
         <div v-else-if="state.syncing" class="sub">🔄 Updated from another device</div>
       </div>
