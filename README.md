@@ -33,7 +33,8 @@ A tiny web app where each family member has a task and a reward unlocked after 3
 - **Preview**: `npm run preview` - Preview the production build
 
 ## Customize Members
-Edit `src/main.js` and modify the `membersConfig` array. For each member define:
+Copy `src/config.sample.js` to `src/config.js` and modify `membersConfig`. For each member define:
+
 ```js
 {
   id: "unique-id",
