@@ -188,9 +188,8 @@ const App = {
       return document.body.classList.contains('dashboard');
     }
 
-    function handleComplete(member, task, sign) {
-      if (!task) return;
-      const delta = (task.stars || 1) * (sign > 0 ? 1 : -1);
+    function handleCompleteUnit(member, stars) {
+      const delta = stars || 1;
       updateStars(member.id, delta);
       if (!isUndoing) {
         state.history.push(async () => {
@@ -233,7 +232,7 @@ const App = {
       }
     }
 
-    return { members, state, getMemberState, currentTask, currentReward, starsArray, canRedeem, isDashboard, handleComplete, changeIndex, handleRedeem, handleGlobalUndo };
+    return { members, state, getMemberState, currentTask, currentReward, starsArray, canRedeem, isDashboard, handleCompleteUnit, changeIndex, handleRedeem, handleGlobalUndo };
   },
   template: `
     <div class="container">
@@ -273,8 +272,14 @@ const App = {
               </div>
               <img :src="(currentTask(m).item?.img || m.taskImg)" :alt="(currentTask(m).item?.title || m.task)" />
               <div class="controls under-media" v-if="!isDashboard()">
-                <button class="primary" @click="handleComplete(m, currentTask(m).item, 1)">+ Complete</button>
-                <span class="sub" v-if="currentTask(m).item">+{{ currentTask(m).item.stars || 1 }}★</span>
+                <button
+                  class="primary"
+                  v-for="u in (currentTask(m).item?.units || [{ label: 'Complete', stars: (currentTask(m).item?.stars || 1) }])"
+                  :key="u.label"
+                  @click="handleCompleteUnit(m, u.stars)"
+                >
+                  {{ u.label }} (+{{ u.stars }}★)
+                </button>
               </div>
             </div>
             <div class="media">

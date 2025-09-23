@@ -9,8 +9,22 @@ export const membersConfig = [
     name: "Baba",
     avatar: "/img/m_aaron.svg",
     tasks: [
-      { title: "Laundry", img: "/img/laundry.avif", stars: 1 },
-      { title: "Make Bed", img: "/img/make_bed.avif", stars: 1 }
+      {
+        title: "Laundry",
+        img: "/img/laundry.avif",
+        units: [
+          { label: "1 load", stars: 3 },
+          { label: "Fold + put away", stars: 2 }
+        ]
+      },
+      {
+        title: "Language Learning",
+        img: "/img/learn_french.png",
+        units: [
+          { label: "1 book review", stars: 5 },
+          { label: "1 Duolingo unit", stars: 1 }
+        ]
+      }
     ],
     rewards: [
       { title: "Spa Day", img: "/img/pig_spa.png", cost: 30 },
@@ -23,7 +37,16 @@ export const membersConfig = [
     name: "Mahmee",
     avatar: "/img/m_liz.svg",
     tasks: [
-      { title: "Tidy", img: "/img/mom_cleaning.png", stars: 1 }
+      {
+        title: "Tidy",
+        img: "/img/mom_cleaning.png",
+        units: [
+          { label: "1 pile", stars: 5 },
+          { label: "1 drawer", stars: 5 },
+          { label: "5 hangers", stars: 5 },
+          { label: "1 box", stars: 5 }
+        ]
+      }
     ],
     rewards: [
       { title: "Spa Day", img: "/img/dog_spa.png", cost: 30 }
@@ -34,7 +57,13 @@ export const membersConfig = [
     name: "Goh goh",
     avatar: "/img/m_malcolm.svg",
     tasks: [
-      { title: "Phonics Time", img: "/img/phonics.webp", stars: 1 }
+      {
+        title: "Phonics Time",
+        img: "/img/phonics.webp",
+        units: [
+          { label: "10 words", stars: 1 }
+        ]
+      }
     ],
     rewards: [
       { title: "Digital Watch", img: "/img/spiderman_watch.png", cost: 30 }
@@ -45,7 +74,13 @@ export const membersConfig = [
     name: "Dai dai",
     avatar: "/img/m_arvin.svg",
     tasks: [
-      { title: "Poo/pee in potty", img: "/img/potty.webp", stars: 1 }
+      {
+        title: "Poo/pee in potty",
+        img: "/img/potty.webp",
+        units: [
+          { label: "Success", stars: 1 }
+        ]
+      }
     ],
     rewards: [
       { title: "Digital Watch", img: "/img/chase_watch.png", cost: 30 }
