@@ -6,11 +6,13 @@ const state = reactive({
   members: {}, // id -> { stars, taskIndex, rewardIndex, redemptions }
   loading: false,
   error: null,
-  syncing: false // for cross-tab sync indicator
+  syncing: false, // for cross-tab sync indicator
+  history: [] // session-scoped undo stack (LIFO)
 });
 
 // Server-Sent Events for real-time sync across devices
 let eventSource = null;
+let isUndoing = false; // guard to avoid recording undo-triggered actions
 
 async function fetchState() {
   state.loading = true;
@@ -190,6 +192,11 @@ const App = {
       if (!task) return;
       const delta = (task.stars || 1) * (sign > 0 ? 1 : -1);
       updateStars(member.id, delta);
+      if (!isUndoing) {
+        state.history.push(async () => {
+          await updateStars(member.id, -delta);
+        });
+      }
     }
     function changeIndex(member, which, direction) {
       const list = which === 'task' ? (member.tasks || []) : (member.rewards || []);
@@ -198,19 +205,35 @@ const App = {
       const cur = which === 'task' ? (ms.taskIndex || 0) : (ms.rewardIndex || 0);
       const next = (cur + direction + list.length) % list.length;
       updateIndex(member.id, which, next);
+      if (!isUndoing) {
+        const prev = cur;
+        state.history.push(async () => {
+          await updateIndex(member.id, which, prev);
+        });
+      }
     }
     function handleRedeem(member) {
       const { idx, item } = currentReward(member);
       if (!item) return;
       redeemAction(member.id, `reward:${idx}`, item.cost || 0, 'redeem');
+      if (!isUndoing) {
+        state.history.push(async () => {
+          await redeemAction(member.id, `reward:${idx}`, item.cost || 0, 'undo');
+        });
+      }
     }
-    function handleUndoRedeem(member) {
-      const { idx, item } = currentReward(member);
-      if (!item) return;
-      redeemAction(member.id, `reward:${idx}`, item.cost || 0, 'undo');
+    async function handleGlobalUndo() {
+      const undoAction = state.history.pop();
+      if (!undoAction) return;
+      try {
+        isUndoing = true;
+        await undoAction();
+      } finally {
+        isUndoing = false;
+      }
     }
 
-    return { members, state, getMemberState, currentTask, currentReward, starsArray, canRedeem, isDashboard, handleComplete, changeIndex, handleRedeem, handleUndoRedeem };
+    return { members, state, getMemberState, currentTask, currentReward, starsArray, canRedeem, isDashboard, handleComplete, changeIndex, handleRedeem, handleGlobalUndo };
   },
   template: `
     <div class="container">
@@ -221,8 +244,11 @@ const App = {
           <div class="trophy-icon" style="display: none;"></div>
           Home Cred
         </div>
-        <div v-if="state.loading" class="sub">Syncing…</div>
-        <div v-else-if="state.syncing" class="sub">🔄 Updated from another device</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-left:auto;">
+          <div v-if="state.loading" class="sub">Syncing…</div>
+          <div v-else-if="state.syncing" class="sub">🔄 Updated from another device</div>
+          <button @click="handleGlobalUndo" :disabled="state.history.length === 0">Undo</button>
+        </div>
       </div>
 
       <div class="grid">
@@ -247,7 +273,6 @@ const App = {
               </div>
               <img :src="(currentTask(m).item?.img || m.taskImg)" :alt="(currentTask(m).item?.title || m.task)" />
               <div class="controls under-media" v-if="!isDashboard()">
-                <button class="danger" @click="handleComplete(m, currentTask(m).item, -1)">– Undo</button>
                 <button class="primary" @click="handleComplete(m, currentTask(m).item, 1)">+ Complete</button>
                 <span class="sub" v-if="currentTask(m).item">+{{ currentTask(m).item.stars || 1 }}★</span>
               </div>
@@ -264,7 +289,6 @@ const App = {
               <img :src="(currentReward(m).item?.img || m.rewardImg)" :alt="(currentReward(m).item?.title || m.reward)" />
               <div class="controls under-media" v-if="!isDashboard()">
                 <button class="primary" :disabled="!canRedeem(getMemberState(m.id).stars, currentReward(m).item?.cost)" @click="handleRedeem(m)">Redeem</button>
-                <button class="danger" :disabled="!(getMemberState(m.id).redemptions && getMemberState(m.id).redemptions['reward:'+currentReward(m).idx] > 0)" @click="handleUndoRedeem(m)">Undo</button>
                 <span class="sub" v-if="currentReward(m).item">Cost: {{ currentReward(m).item.cost }}★</span>
               </div>
             </div>
