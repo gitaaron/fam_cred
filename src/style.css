@@ -150,7 +150,7 @@ a{color:#93c5fd}
 /* Dashboard mode hides controls and scrollbars on large displays */
 body.dashboard .controls{display:none}
 body.dashboard .carousel-nav{display:none}
-body.dashboard { overflow: hidden }
+body.dashboard { overflow: hidden; --dashboard-scale: 1 }
 body.dashboard ::-webkit-scrollbar{display:none}
 
 /* Dashboard mode: smaller cards to fit all on screen */
@@ -185,6 +185,8 @@ body.mobile .boxes{display:none}
 body.dashboard .container{
   margin: 20px auto;
   padding: 0 12px;
+  transform: scale(var(--dashboard-scale));
+  transform-origin: top center;
 }
 body.dashboard .header{
   margin-bottom: 16px;
@@ -192,6 +194,8 @@ body.dashboard .header{
 body.dashboard .title{
   font-size: clamp(18px, 2.5vw, 32px);
 }
+/* Dashboard: prevent non-essential content */
+body.dashboard .footer{display:none}
 @media (min-width: 768px) and (max-width: 1199px){
   .grid{display:flex;flex-wrap:wrap;gap:20px}
   .card{flex:1 1 calc(50% - 10px)}

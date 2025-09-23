@@ -146,6 +146,80 @@ const App = {
           }
         }, 5000);
       };
+
+      if (document.body.classList.contains('dashboard')) {
+        const container = document.querySelector('.container');
+        const applyDashboardScale = () => {
+          if (!container) return;
+          // reset scale to measure natural size
+          document.body.style.setProperty('--dashboard-scale', '1');
+
+          const rect = container.getBoundingClientRect();
+          const cs = getComputedStyle(container);
+          const marginTop = parseFloat(cs.marginTop) || 0;
+          const marginBottom = parseFloat(cs.marginBottom) || 0;
+          const marginLeft = parseFloat(cs.marginLeft) || 0;
+          const marginRight = parseFloat(cs.marginRight) || 0;
+
+          const viewportHeight = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+          const viewportWidth = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+
+          const gutter = 16; // safety padding to avoid clipping
+          const availableWidth = Math.max(0, viewportWidth - marginLeft - marginRight - gutter);
+          const availableHeight = Math.max(0, viewportHeight - marginTop - marginBottom - gutter);
+
+          // Use natural content size to avoid clipping after wrap
+          const naturalWidth = Math.max(rect.width, container.scrollWidth);
+          const naturalHeight = Math.max(rect.height, container.scrollHeight);
+
+          const widthScale = naturalWidth > 0 ? availableWidth / naturalWidth : 1;
+          const heightScale = naturalHeight > 0 ? availableHeight / naturalHeight : 1;
+          const rawScale = Math.min(widthScale, heightScale, 1);
+          const scale = Math.max(0, Math.min(1, rawScale * 0.98)); // slightly larger cushion
+
+          document.body.style.setProperty('--dashboard-scale', String(scale));
+
+          // re-run once after layout settles to capture wrap changes
+          requestAnimationFrame(() => {
+            const rect2 = container.getBoundingClientRect();
+            const naturalWidth2 = Math.max(rect2.width, container.scrollWidth);
+            const naturalHeight2 = Math.max(rect2.height, container.scrollHeight);
+            const widthScale2 = naturalWidth2 > 0 ? availableWidth / naturalWidth2 : 1;
+            const heightScale2 = naturalHeight2 > 0 ? availableHeight / naturalHeight2 : 1;
+            const scale2 = Math.max(0, Math.min(1, Math.min(widthScale2, heightScale2) * 0.98));
+            document.body.style.setProperty('--dashboard-scale', String(scale2));
+            // Run a third pass shortly after to catch async image load shifts
+            setTimeout(() => {
+              const rect3 = container.getBoundingClientRect();
+              const naturalWidth3 = Math.max(rect3.width, container.scrollWidth);
+              const naturalHeight3 = Math.max(rect3.height, container.scrollHeight);
+              const widthScale3 = naturalWidth3 > 0 ? availableWidth / naturalWidth3 : 1;
+              const heightScale3 = naturalHeight3 > 0 ? availableHeight / naturalHeight3 : 1;
+              const scale3 = Math.max(0, Math.min(1, Math.min(widthScale3, heightScale3) * 0.98));
+              document.body.style.setProperty('--dashboard-scale', String(scale3));
+            }, 100);
+          });
+        };
+
+        applyDashboardScale();
+
+        const handleResize = () => applyDashboardScale();
+        window.addEventListener('resize', handleResize, { passive: true });
+        window.addEventListener('orientationchange', handleResize, { passive: true });
+
+        let ro;
+        if (window.ResizeObserver) {
+          ro = new ResizeObserver(() => applyDashboardScale());
+          ro.observe(container);
+        }
+
+        // Store cleanup on state for unmount
+        state.__dashCleanup = () => {
+          window.removeEventListener('resize', handleResize);
+          window.removeEventListener('orientationchange', handleResize);
+          if (ro) ro.disconnect();
+        };
+      }
     });
     
     onUnmounted(() => {
@@ -153,6 +227,10 @@ const App = {
       if (eventSource) {
         eventSource.close();
         eventSource = null;
+      }
+      if (state.__dashCleanup) {
+        try { state.__dashCleanup(); } catch (_) {}
+        delete state.__dashCleanup;
       }
     });
     
