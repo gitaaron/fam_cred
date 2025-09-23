@@ -93,3 +93,15 @@ Create a simple web based vue.js app that has the following features:
 ### Disabled buttons
 
 * any button that is disabled should have a clear style so that it is obvious it is disabled
+
+### Information Organization
+
+* the task title should go in the task card header
+
+* the reward title should go in the reward card header
+
+* the number of stars in a person's inventory along with their progress bar should go somewhere in the person card header
+
+### Style
+
+* the card buttons should be full width

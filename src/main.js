@@ -256,14 +256,16 @@ const App = {
             <img class="avatar" :src="m.avatar" :alt="m.name" />
             <div class="person">
               <div class="name">{{ m.name }}</div>
-              <div class="sub">Task: {{ currentTask(m).item?.title || m.task }} • Reward: {{ currentReward(m).item?.title || m.reward }}</div>
+              <div class="person-stats">
+                <div class="count">{{ getMemberState(m.id).stars || 0 }}★</div>
+              </div>
             </div>
           </div>
 
           <div class="media-row">
             <div class="media">
               <div class="row-between">
-                <span class="badge">Task</span>
+                <span class="badge">Task • {{ currentTask(m).item?.title || m.task }}</span>
                 <div class="carousel-nav" v-if="(m.tasks?.length||0) > 1">
                   <button @click="changeIndex(m,'task',-1)">◀</button>
                   <span class="index">{{ (getMemberState(m.id).taskIndex||0)+1 }}/{{ m.tasks.length }}</span>
@@ -284,7 +286,7 @@ const App = {
             </div>
             <div class="media">
               <div class="row-between">
-                <span class="badge">Reward</span>
+                <span class="badge">Reward • {{ currentReward(m).item?.title || m.reward }}</span>
                 <div class="carousel-nav" v-if="(m.rewards?.length||0) > 1">
                   <button @click="changeIndex(m,'reward',-1)">◀</button>
                   <span class="index">{{ (getMemberState(m.id).rewardIndex||0)+1 }}/{{ m.rewards.length }}</span>
@@ -293,23 +295,17 @@ const App = {
               </div>
               <img :src="(currentReward(m).item?.img || m.rewardImg)" :alt="(currentReward(m).item?.title || m.reward)" />
               <div class="controls under-media" v-if="!isDashboard()">
-                <button class="primary" :disabled="!canRedeem(getMemberState(m.id).stars, currentReward(m).item?.cost)" @click="handleRedeem(m)">Redeem</button>
-                <span class="sub" v-if="currentReward(m).item">Cost: {{ currentReward(m).item.cost }}★</span>
+                <button class="primary" :disabled="!canRedeem(getMemberState(m.id).stars, currentReward(m).item?.cost)" @click="handleRedeem(m)">Redeem • {{ currentReward(m).item?.cost || 0 }}★</button>
+              </div>
+              <div class="boxes">
+                <div class="box" v-for="(filled, i) in starsArray(getMemberState(m.id).stars || 0, currentReward(m).item?.cost || 30)" :key="i">
+                  <span v-if="filled">★</span>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="progress">
-            <div class="count">Stars: {{ getMemberState(m.id).stars || 0 }}</div>
-            <div class="bar"><div class="fill" :style="{ width: Math.min(100, Math.round(((getMemberState(m.id).stars||0) / (currentReward(m).item?.cost || 30)) * 100)) + '%' }"></div></div>
-          </div>
-
-          <div class="boxes">
-            <div class="box" v-for="(filled, i) in starsArray(getMemberState(m.id).stars || 0, currentReward(m).item?.cost || 30)" :key="i">
-              <span v-if="filled">★</span>
-            </div>
-          </div>
         </div>
+
       </div>
 
       <div class="footer">
@@ -320,3 +316,5 @@ const App = {
 };
 
 createApp(App).mount('#app');
+
+

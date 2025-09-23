@@ -93,6 +93,7 @@ body{
   display:flex;flex-direction:column;gap:4px
 }
 .person .name{font-weight:700;font-size:18px}
+.person-stats{display:flex;align-items:center;gap:10px}
 .sub{color:var(--muted);font-size:12px}
 .media-row{
   display:flex;gap:10px;margin:8px 0 14px
@@ -124,6 +125,8 @@ body{
   display:flex;gap:8px;flex-wrap:wrap
 }
 .controls.under-media{margin-top:6px}
+/* full width buttons inside card controls */
+.controls button{flex:1 1 100%}
 button{
   background:#0b1220;border:1px solid rgba(148,163,184,.3);color:var(--text);padding:8px 10px;border-radius:10px;cursor:pointer;
 }
@@ -177,6 +180,8 @@ body.dashboard .box{
   height: 24px;
   font-size: 14px;
 }
+/* Hide star boxes on mobile app */
+body.mobile .boxes{display:none}
 body.dashboard .container{
   margin: 20px auto;
   padding: 0 12px;
