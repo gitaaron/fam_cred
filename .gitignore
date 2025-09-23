@@ -1,6 +1,7 @@
 # Data
 data
 src/config.js
+img/people
 
 # Dependencies
 node_modules/
