@@ -57,3 +57,39 @@ Create a simple web based vue.js app that has the following features:
             *  all buttons to complete tasks and redeem rewards etc...
 
     * besides syncing the completion counts between the mobile/dashboard also sync the reward and task items that are currently displayed so if I change the reward/task shown for a certain person then it should be reflected on the dashboard
+
+
+### Task Completion Units
+
+* each task has different ways to get rewarded
+
+    eg/
+        tidy has:
+            * 1 pile = 5 stars
+            * 1 drawer = 5 stars
+            * 5 shelves = 5 stars
+            * 1 box = 10 stars
+
+        language learning has:
+            * 1 book review = 5 stars
+            * 1 duolingo unit = 1 star
+
+        phonics time:
+            * 10 words = 1 star
+
+        poo/pee in potty:
+            * success = 1 star
+
+* instead of having a single complete button for each task there should be one button for each completion unit where the button displays the unit label along with number of stars you get for completing it
+
+* update `config.js` and `config.sample.js` accordingly
+
+### Undo Button
+
+* instead of having a single undo button on each card there should be one global undo button in the top right of the screen (in the app bar inline with 'Home Cred')
+
+* tapping the undo button just reverts each action that was previously done in the current browser session in reverse order of when they were done (eg/ most recent is revert first)
+
+### Disabled buttons
+
+* any button that is disabled should have a clear style so that it is obvious it is disabled
