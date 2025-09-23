@@ -2,88 +2,103 @@
 // Each member has arrays of tasks and rewards.
 // - Task: { title, img, stars } where stars is how many stars granted per completion
 // - Reward: { title, img, cost } where cost is stars required to redeem
+//
+//
+
+// Tasks
+
+const tidyTask = {
+  title: "Tidy",
+  img: "/img/tasks/declutter.png",
+  units: [
+    { label: "1 pile", stars: 5 },
+    { label: "1 drawer", stars: 5 },
+    { label: "5 hangers", stars: 5 },
+    { label: "1 box", stars: 5 }
+  ]
+}
+
+const learnFrenchTask = {
+  title: "French Learning",
+  img: "/img/tasks/learn_french.png",
+  units: [
+    { label: "1 book review", stars: 5 },
+    { label: "1 Duolingo unit", stars: 1 }
+  ]
+}
+
+const learnPhonicsTask = {
+  title: "Learn Phonics",
+  img: "/img/tasks/learn_phonics.png",
+  units: [
+    { label: "10 words", stars: 1 }
+  ]
+}
+
+const pottyTask = {
+  title: "Poo/pee in potty",
+  img: "/img/tasks/use_potty.png",
+  units: [
+    { label: "Success", stars: 1 }
+  ]
+}
+
+// Rewards
+
+const spaReward = { title: "Spa Day", img: "/img/rewards/spa_day.png", cost: 30 }
+
+const climbingReward = { title: "Climb Day", img: "/img/rewards/climbing.png", cost: 15 }
+
+const spidermanWatchReward = { title: "Digital Watch", img: "/img/rewards/spiderman_watch.png", cost: 30 }
+
+const chaseWatchReward = { title: "Digital Watch", img: "/img/rewards/chase_watch.png", cost: 30 }
+
 
 export const membersConfig = [
   {
     id: "aaron",
     name: "Baba",
-    avatar: "/img/m_aaron.svg",
+    avatar: "/img/sample_people/m_baba.svg",
     tasks: [
-      {
-        title: "Laundry",
-        img: "/img/laundry.avif",
-        units: [
-          { label: "1 load", stars: 3 },
-          { label: "Fold + put away", stars: 2 }
-        ]
-      },
-      {
-        title: "Language Learning",
-        img: "/img/learn_french.png",
-        units: [
-          { label: "1 book review", stars: 5 },
-          { label: "1 Duolingo unit", stars: 1 }
-        ]
-      }
+      tidyTask,
+      learnFrenchTask,
     ],
     rewards: [
-      { title: "Spa Day", img: "/img/pig_spa.png", cost: 30 },
-      { title: "Climb Day", img: "/img/pig_spa.png", cost: 30 }
-
+      spaReward,
+      climbingReward,
     ]
   },
   {
     id: "malissa",
     name: "Mahmee",
-    avatar: "/img/m_liz.svg",
+    avatar: "/img/sample_people/m_mahmee.svg",
     tasks: [
-      {
-        title: "Tidy",
-        img: "/img/mom_cleaning.png",
-        units: [
-          { label: "1 pile", stars: 5 },
-          { label: "1 drawer", stars: 5 },
-          { label: "5 hangers", stars: 5 },
-          { label: "1 box", stars: 5 }
-        ]
-      }
+      tidyTask,
     ],
     rewards: [
-      { title: "Spa Day", img: "/img/dog_spa.png", cost: 30 }
+      spaReward,
     ]
   },
   {
     id: "malcolm",
     name: "Goh goh",
-    avatar: "/img/m_malcolm.svg",
+    avatar: "/img/sample_people/m_gohgoh.svg",
     tasks: [
-      {
-        title: "Phonics Time",
-        img: "/img/phonics.webp",
-        units: [
-          { label: "10 words", stars: 1 }
-        ]
-      }
+      learnPhonicsTask
     ],
     rewards: [
-      { title: "Digital Watch", img: "/img/spiderman_watch.png", cost: 30 }
+      spidermanWatchReward
     ]
   },
   {
     id: "arvin",
     name: "Dai dai",
-    avatar: "/img/m_arvin.svg",
+    avatar: "/img/sample_people/m_daidai.svg",
     tasks: [
-      {
-        title: "Poo/pee in potty",
-        img: "/img/potty.webp",
-        units: [
-          { label: "Success", stars: 1 }
-        ]
-      }
+      pottyTask
     ],
     rewards: [
-      { title: "Digital Watch", img: "/img/chase_watch.png", cost: 30 }
+      chaseWatchReward
     ]
   }
 ];

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250">
-  <rect width="100%" height="100%" fill="#0b1220"/>
-  <circle cx="140" cy="120" r="40" fill="#f472b6"/>
-  <circle cx="200" cy="120" r="40" fill="#ec4899" opacity=".8"/>
-  <circle cx="260" cy="120" r="40" fill="#f9a8d4" opacity=".6"/>
-  <text x="200" y="225" text-anchor="middle" font-size="18" fill="#e5e7eb" font-family="Arial">Spa Day</text>
-</svg>
