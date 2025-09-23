@@ -130,6 +130,18 @@ button{
 button:hover{border-color: rgba(148,163,184,.6)}
 button.primary{background:linear-gradient(180deg, rgba(34,197,94,.1), rgba(34,197,94,.05));border-color: rgba(34,197,94,.5)}
 button.danger{background:linear-gradient(180deg, rgba(239,68,68,.1), rgba(239,68,68,.05));border-color: rgba(239,68,68,.5)}
+/* Disabled button states */
+button:disabled,
+button[disabled],
+button[aria-disabled="true"],
+button.is-disabled{
+  opacity:.5;cursor:not-allowed;filter:grayscale(60%);box-shadow:none;
+  background:#0b1220 !important;border-color: rgba(148,163,184,.2) !important;color: var(--muted);
+}
+button:disabled:hover,
+button[disabled]:hover,
+button[aria-disabled="true"]:hover,
+button.is-disabled:hover{border-color: rgba(148,163,184,.2)}
 .footer{margin-top:24px;color:var(--muted);font-size:12px;text-align:center}
 a{color:#93c5fd}
 /* Dashboard mode hides controls and scrollbars on large displays */
