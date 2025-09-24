@@ -138,3 +138,5 @@ Create a simple web based vue.js app that has the following features:
 * the dashboard should be resized so that the content on it never overflows the screen since it cannot be scrolled
 
 * give the empty star boxes a lighter background so that they stick out a bit more
+
+* make it so that the star fills the entire box

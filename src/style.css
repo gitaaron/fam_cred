@@ -106,7 +106,7 @@ body{
 /* Make the star boxes wrap within available space to avoid overflow */
 .header-boxes{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;flex:1;min-width:0;max-width:100%}
 /* Make header boxes expand to column width and remain square */
-.header-boxes .box{width:100%;height:auto;aspect-ratio:1/1;font-size:clamp(12px,1.6vw,16px)}
+.header-boxes .box{width:100%;height:auto;aspect-ratio:1/1;font-size:clamp(16px,2.5vw,24px);overflow:hidden;display:flex;align-items:center;justify-content:center}
 /* Ensure the numeric count aligns to the top */
 .person-stats .count{align-self:flex-start}
 .sub{color:var(--muted);font-size:12px}
@@ -203,7 +203,7 @@ body.dashboard .box{
 body.dashboard .person-stats{container-type: normal}
 /* Dashboard: enforce 10 columns grid for header boxes to minimize rows */
 body.dashboard .header-boxes{display:grid;grid-template-columns:repeat(10,1fr)}
-body.dashboard .header-boxes .box{width:100%;height:auto;aspect-ratio:1/1;font-size:12px}
+body.dashboard .header-boxes .box{width:100%;height:auto;aspect-ratio:1/1;font-size:36px;overflow:hidden;display:flex;align-items:center;justify-content:center}
 /* Hide star boxes on mobile app */
 body.mobile .boxes{display:none}
 /* Show header star boxes on mobile */
