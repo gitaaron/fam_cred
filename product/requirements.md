@@ -127,6 +127,10 @@ Create a simple web based vue.js app that has the following features:
 
 * the reward should come first and then the task on each care
 
+
+* target different person card widths where if it is a smaller width then there should be 5 star boxes per row and if the person card width is larger then there should be 10 stars per row
+
+    * the boxes should be resized to take up the rest of the width of the card header
 ### Style
 
 * the card buttons should be full width
