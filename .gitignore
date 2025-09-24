@@ -2,6 +2,8 @@
 data
 src/config.js
 img/people
+img/rewards/personal
+img/tasks/personal
 
 # Dependencies
 node_modules/
