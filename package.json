@@ -4,10 +4,15 @@
   "description": "Simple Vue.js + Vite app for family task rewards with persistent counts",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/config-backup.js backup && vite",
+    "dev:watch": "node scripts/config-backup.js watch & vite",
     "build": "vite build",
     "preview": "vite preview",
-    "api": "node api-server.js"
+    "api": "node api-server.js",
+    "config:backup": "node scripts/config-backup.js backup",
+    "config:list": "node scripts/config-backup.js list",
+    "config:restore": "node scripts/restore-config.js",
+    "config:watch": "node scripts/config-backup.js watch"
   },
   "dependencies": {
     "vue": "^3.4.38",

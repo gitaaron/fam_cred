@@ -1,6 +1,7 @@
 # Data
 data
 src/config.js
+config-backups/
 img/people
 img/rewards/personal
 img/tasks/personal
