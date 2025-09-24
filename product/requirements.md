@@ -102,6 +102,33 @@ Create a simple web based vue.js app that has the following features:
 
 * the number of stars in a person's inventory along with their progress bar should go somewhere in the person card header
 
+* the cost of redeeming a reward should be displayed inside the 'redeem' button
+
+
+* the boxes filled with stars should be hidden on the mobile app
+
+* get rid of the progress indicator completely
+
+* the undo button should be hidden in dashboard
+
+* the boxes filled with stars should be part of the person card title on the right side
+
+    * the boxes containing the stars should be to the right and in line 'person star count' item (there should not be any margin or padding above them)
+
+    * the 'count' should be horizontally aligned at the top of the box instead of in the center
+
+    * the name should be below the avatar instead of to the right of it
+
+    * the star boxs should not overflow their container and instead should wrap to the next row
+
+    * the 'avatar-stack' containing the avatar and name should always have a certain percentage width of the entire header row and if the content (avatar or name) is wider then it should be scaled down
+
+    * the star count should go to the right of the name (eg/ it should say "Dai dai | 1 ★")
+
+* the reward should come first and then the task on each care
+
 ### Style
 
 * the card buttons should be full width
+
+* the dashboard should be resized so that the content on it never overflows the screen since it cannot be scrolled

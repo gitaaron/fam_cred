@@ -82,18 +82,31 @@ body{
 }
 .card-header{
   display:flex;
+  flex-direction: column;
   gap:12px;
-  align-items:center;
+  align-items:stretch;
   margin-bottom: 12px;
 }
+/* Name above avatar */
+.card-header .name{font-weight:700;font-size:18px}
+/* Row with avatar on left, stats on right */
+.header-row{display:flex;align-items:stretch;gap:12px}
+/* Stack avatar over name */
+.avatar-stack{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 var(--avatar-col, 32%);max-width:var(--avatar-col, 32%);min-width:0}
+.avatar-stack .avatar{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+.avatar-stack .name{font-weight:700;font-size:clamp(12px, 1.8vw, 18px);text-align:center;word-break:break-word}
+.name-row{display:flex;align-items:baseline;gap:8px;justify-content:center;flex-wrap:wrap}
+.name-row .sep{color:var(--muted)}
+.name-row .count{font-variant-numeric: tabular-nums}
 .avatar{
   width:64px;height:64px;border-radius:14px;object-fit:cover;border:1px solid rgba(148,163,184,.2)
 }
-.person{
-  display:flex;flex-direction:column;gap:4px
-}
-.person .name{font-weight:700;font-size:18px}
-.person-stats{display:flex;align-items:center;gap:10px}
+.person{display:none}
+.person-stats{display:flex;align-items:flex-start;gap:10px;flex:1;min-width:0}
+/* Make the star boxes wrap within available space to avoid overflow */
+.header-boxes{display:flex;flex-wrap:wrap;gap:6px;flex:1;min-width:0;max-width:100%}
+/* Ensure the numeric count aligns to the top */
+.person-stats .count{align-self:flex-start}
 .sub{color:var(--muted);font-size:12px}
 .media-row{
   display:flex;gap:10px;margin:8px 0 14px
@@ -115,7 +128,7 @@ body{
 }
 .fill{height:100%;background:linear-gradient(90deg, var(--accent), var(--accent-2));width:0%}
 .boxes{
-  display:flex;flex-wrap: wrap; gap:6px;margin:12px 0
+  display:flex;flex-wrap: wrap; gap:6px;margin:0px 0px 10px 0px
 }
 .box{
   width: 30px; height: 30px; border:1px dashed rgba(148,163,184,.25);border-radius:6px;display:flex;align-items:center;justify-content:center;
@@ -163,7 +176,10 @@ body.dashboard .avatar{
   width: 160px;
   height: 160px;
 }
-body.dashboard .person .name{
+/* Ensure avatar scales within the avatar-stack column in dashboard mode */
+body.dashboard .avatar-stack{flex-basis: var(--avatar-col, 28%);max-width: var(--avatar-col, 28%)}
+body.dashboard .avatar-stack .avatar{width:100%;height:auto;aspect-ratio:1/1}
+body.dashboard .card-header .name{
   font-size: 16px;
 }
 body.dashboard .media{
@@ -182,6 +198,8 @@ body.dashboard .box{
 }
 /* Hide star boxes on mobile app */
 body.mobile .boxes{display:none}
+/* Show header star boxes on mobile */
+body.mobile .header-boxes{display:flex}
 body.dashboard .container{
   margin: 20px auto;
   padding: 0 12px;

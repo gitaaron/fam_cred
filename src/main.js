@@ -331,11 +331,21 @@ const App = {
       <div class="grid">
         <div class="card" v-for="m in members" :key="m.id">
           <div class="card-header">
-            <img class="avatar" :src="m.avatar" :alt="m.name" />
-            <div class="person">
-              <div class="name">{{ m.name }}</div>
+            <div class="header-row">
+              <div class="avatar-stack">
+                <img class="avatar" :src="m.avatar" :alt="m.name" />
+                <div class="name-row">
+                  <div class="name">{{ m.name }}</div>
+                  <span class="sep">|</span>
+                  <div class="count">{{ getMemberState(m.id).stars || 0 }}★</div>
+                </div>
+              </div>
               <div class="person-stats">
-                <div class="count">{{ getMemberState(m.id).stars || 0 }}★</div>
+                <div class="boxes header-boxes">
+                  <div class="box" v-for="(filled, i) in starsArray(getMemberState(m.id).stars || 0, currentReward(m).item?.cost || 30)" :key="i">
+                    <span v-if="filled">★</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -374,11 +384,6 @@ const App = {
               <img :src="(currentReward(m).item?.img || m.rewardImg)" :alt="(currentReward(m).item?.title || m.reward)" />
               <div class="controls under-media" v-if="!isDashboard()">
                 <button class="primary" :disabled="!canRedeem(getMemberState(m.id).stars, currentReward(m).item?.cost)" @click="handleRedeem(m)">Redeem • {{ currentReward(m).item?.cost || 0 }}★</button>
-              </div>
-              <div class="boxes">
-                <div class="box" v-for="(filled, i) in starsArray(getMemberState(m.id).stars || 0, currentReward(m).item?.cost || 30)" :key="i">
-                  <span v-if="filled">★</span>
-                </div>
               </div>
             </div>
           </div>
