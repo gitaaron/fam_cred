@@ -160,8 +160,8 @@ body.dashboard .card{
   font-size: 14px;
 }
 body.dashboard .avatar{
-  width: 48px;
-  height: 48px;
+  width: 160px;
+  height: 160px;
 }
 body.dashboard .person .name{
   font-size: 16px;
@@ -191,6 +191,7 @@ body.dashboard .container{
 body.dashboard .header{
   margin-bottom: 16px;
 }
+body.dashboard .header button{display:none}
 body.dashboard .title{
   font-size: clamp(18px, 2.5vw, 32px);
 }
@@ -212,8 +213,8 @@ body.dashboard .footer{display:none}
     gap: 16px;
   }
   body.dashboard .avatar{
-    width: 40px;
-    height: 40px;
+    width: 150px;
+    height: 150px;
   }
   body.dashboard .person .name{
     font-size: 14px;
